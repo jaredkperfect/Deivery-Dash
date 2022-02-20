@@ -2,6 +2,7 @@
 extends KinematicBody2D
 
 signal player_stopped
+signal player_moving
 
 export var wheel_base = 70  # Distance from front to rear wheel. Original: 70
 export var steering_angle = 15  # Amount that front wheel turns, in degrees. Original: 70
@@ -18,13 +19,7 @@ export var traction_slow = 0.7 # Low-speed traction. Original: 0.7
 var velocity = Vector2.ZERO # track overall velocity
 var steer_angle
 var acceleration = Vector2.ZERO # track overall acceleration
-var stopped = false # track if car is not moving
-
-
-
-
-
-
+var is_stopped 
 
 
 
@@ -79,19 +74,11 @@ func calculate_steering(delta):
 	
 func check_if_stopped():
 	if (is_zero_approx(velocity.length())):
-		stopped = true
+		is_stopped = true
+		emit_signal("player_stopped")
 	else:
-		stopped = false
+		is_stopped = false
+		emit_signal("player_moving")
 		
 		
-	
-	
-
-
-	
-	
-
-
-func _on_pickup_area_body_entered(body):
-	print("Player enetered pick up zone!")
 	
