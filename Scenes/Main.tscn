@@ -1,8 +1,40 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scenes/pickup_area.gd" type="Script" id=2]
+[ext_resource path="res://icon.png" type="Texture" id=3]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 58.1585, 59.3001 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 30.8294, 48.9744 )
 
 [node name="Main" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 483.661, 268.701 )
+
+[node name="Pickup Location" type="StaticBody2D" parent="."]
+position = Vector2( 800.014, 73.7603 )
+rotation = 1.5708
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="Pickup Location"]
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+
+[node name="building_collision" type="CollisionShape2D" parent="Pickup Location"]
+shape = SubResource( 1 )
+
+[node name="pickup_area" type="Area2D" parent="Pickup Location"]
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pickup Location/pickup_area"]
+position = Vector2( 100, 0 )
+shape = SubResource( 2 )
+
+[connection signal="player_stopped" from="Player" to="Pickup Location/pickup_area" method="_on_Player_player_stopped"]
+[connection signal="body_entered" from="Pickup Location/pickup_area" to="Player" method="_on_pickup_area_body_entered"]

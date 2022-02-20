@@ -1,6 +1,8 @@
 # Got this code from https://kidscancode.org/godot_recipes/2d/car_steering/ as a starter
 extends KinematicBody2D
 
+signal player_stopped
+
 export var wheel_base = 70  # Distance from front to rear wheel. Original: 70
 export var steering_angle = 15  # Amount that front wheel turns, in degrees. Original: 70
 export var engine_power = 800 # Forward acceleration force. Original: 800 
@@ -16,6 +18,8 @@ export var traction_slow = 0.7 # Low-speed traction. Original: 0.7
 var velocity = Vector2.ZERO # track overall velocity
 var steer_angle
 var acceleration = Vector2.ZERO # track overall acceleration
+var stopped = false # track if car is not moving
+
 
 
 
@@ -29,6 +33,7 @@ func _physics_process(delta):
 	get_input()
 	apply_friction()
 	calculate_steering(delta)
+	check_if_stopped()
 	velocity += acceleration * delta
 	velocity = move_and_slide(velocity)
 	
@@ -72,4 +77,21 @@ func calculate_steering(delta):
 		velocity = -new_heading * min(velocity.length(), max_speed_reverse)
 	rotation = new_heading.angle()
 	
+func check_if_stopped():
+	if (is_zero_approx(velocity.length())):
+		stopped = true
+	else:
+		stopped = false
+		
+		
+	
+	
 
+
+	
+	
+
+
+func _on_pickup_area_body_entered(body):
+	print("Player enetered pick up zone!")
+	
